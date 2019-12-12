@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+    canvas{
+        background-color:black;
+    }
+    </style>
+</head>
+<body>
+    <div>
+        <button id="pen">Pen</button>
+        <button id="line">Line</button>
+        <button id="square">Square</button>
+        <input type="color" id="choice_color" value="#ff0000">
+    </div>
+    <canvas id="board" width="500px" height="300px"></canvas>
+
+    <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
+    <script>
+        $(document).ready(function() {
+            var canvas = document.getElementById('board');
+            var context = canvas.getContext('2d');
+            var choice_color = $('#choice_color');
+            
+
+
+            context.strokeStyle = choice_color.val();
+            context.lineWidth = "3";
+            
+            //버튼
+            var position = $(canvas).offset();
+            var penBtn = $('#pen');
+            var lineBtn = $('#line');
+            var squareBtn = $('#square');
+
+            //버튼 기능
+            choice_color.change( () => context.strokeStyle = choice_color.val() );
+            penBtn.click(()=>pen());
+            lineBtn.click(()=>line());
+            squareBtn.click(()=>square());
+
+            function pen(){
+                $(canvas).unbind();
+                function draw(e){
+                    //마우스가 눌려 있을 시 움직일때마다 그리기
+                    if(e.type=='mousedown'){
+                        $(canvas).mousemove( () => {
+                                x=event.pageX-position.left;
+                                y=event.pageY-position.top;
+                                //새로운 경로 생성
+                                context.beginPath();
+                                //좌표 지정(마우스 위치)
+                                context.moveTo(x, y);
+                                //좌표에서부터 1 라인긋기(점찍기)
+                                context.lineTo(x+1, y+1);
+                                //그리기
+                                context.stroke();
+                            }
+                        )
+                    }
+                    //마우스가 안눌려있으면 움직일때 이벤트 삭제
+                    else if(e.type=='mouseup'){
+                        $(canvas).unbind('mousemove');
+                    }
+                }
+                //마우스 이벤트 부여
+                $(canvas).mousedown((e)=>draw(e));
+                $(canvas).mouseup((e)=>draw(e));
+            }
+
+            var x; var y;
+            var cnt=false;
+            //선그리기
+            function line(){
+                $(canvas).unbind();
+                $(canvas).mousedown(()=>{
+                   
+                    if(!cnt){
+                        x = event.pageX - position.left;
+                        y = event.pageY - position.top;
+                        cnt=true;
+                    } else{
+                        context.beginPath();
+                        context.moveTo(x,y);
+                        context.lineTo(event.pageX- position.left, event.pageY- position.top);
+                        context.stroke();
+                        cnt=false;
+                    }
+
+                });
+            }
+
+            //네모그리기
+            function square(){
+                $(canvas).unbind();
+                $(canvas).mousedown(()=>{
+                       x = event.pageX - position.left;
+                       y = event.pageY - position.top;
+               });
+               $(canvas).mouseup(()=>{
+                    context.beginPath();
+                    context.rect(x, y, event.pageX- position.left-x, event.pageY- position.top-y);
+                    context.fillStyle = choice_color.val();
+                    context.fill();
+               });
+            }
+
+        });
+
+    </script>
+</body>
+</html>

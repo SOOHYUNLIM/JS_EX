@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <div id="board" oncontextmenu='return false' ></div>
+
+    <!-- 지뢰 아이콘 링크 -->
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <!-- 깃발 아이콘 링크 -->
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <!-- jquery -->
+    <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
+    <script>
+        var mine = new Array(100);
+        var mineNum = 20;
+        var boardW = 10;
+        var boardH = 10;
+        // <i class='fas fa-bomb' style='font-size:48px;color:red'></i>;
+        $(document).ready(()=>{ 
+            newBoard();
+        });
+
+
+        
+        //마인배치
+        function setMine(){
+            var cnt=0;
+
+            for(var i=0; i<mine.length; i++){
+                mine[i] = '0';
+            }
+
+            for(var i=0; i<mineNum; i++){
+                mine[i] = 'fas fa-bomb';
+            }
+            mine.sort((a,b)=>Math.random()-0.5);
+            // for(i=0; i<mineNum; i++){
+            //     var index = Math.floor(Math.random()*81);
+            //     if(mine[index] != 'fas fa-bomb')
+            //         mine[index] = 'fas fa-bomb';
+            // }
+
+            for(i=0; i<mine.length; i++){
+                if(mine[i-11]!=undefined&&mine[i-11] =='fas fa-bomb'&&i%10!=0) cnt++;
+                if(mine[i-10]!=undefined&&mine[i-10] =='fas fa-bomb') cnt++;
+                if(mine[i-9]!=undefined&&mine[i-9] =='fas fa-bomb'&&i%10!=9) cnt++;
+                if(mine[i+1]!=undefined&&mine[i+1] =='fas fa-bomb'&&i%10!=9) cnt++;
+                if(mine[i-1]!=undefined&&mine[i-1] =='fas fa-bomb'&&i%10!=0) cnt++;
+                if(mine[i+9]!=undefined&&mine[i+9] =='fas fa-bomb'&&i%10!=0) cnt++;
+                if(mine[i+10]!=undefined&&mine[i+10] =='fas f a-bomb') cnt++;
+                if(mine[i+11]!=undefined&&mine[i+11] =='fas fa-bomb'&&i%10!=9) cnt++;
+                if(mine[i]!='fas fa-bomb')mine[i] = cnt;
+                cnt=0;
+            }
+        };
+        
+        //보드 생성
+        function newBoard(){
+            setMine();
+            $('#board').html(()=>{
+                var boardHtml =  "<table board='1'>";
+                for(var i=0, k=0; i<boardW; i++){
+                    boardHtml+="<tr>"
+                    for(var j=0; j<boardH; j++){
+                        if(mine[k]=='fas fa-bomb')
+                            boardHtml+="<td data-mine = '"+mine[k]+"'>"+"<i class='"+mine[k++]+ "'style='font-size:15px;'></i></td>";
+                        else
+                            boardHtml+="<td data-mine = '"+mine[k]+"'>"+mine[k++]+"</td>";
+                    }
+                    boardHtml+="</tr>"
+            }
+                boardHtml+="</table>"
+                return boardHtml;
+            });
+            $('td').css({backgroundColor : "gray", width : "25px", height : "25px", board:"1px", textAlign: 'center'});
+            $('td').each((index, item)=> item.innerText = "");
+            // $('td').each( (index, item) => item.onclick = leftClick );
+
+            $('td').mousedown((e)=>{
+                    if(e.which == 1)    {
+                        leftClick(e);
+                    }
+
+                    else if(e.which == 3)    {
+                        rightClick(e);
+                    }
+            });
+        };
+
+        // 눌렀을 때 이벤트
+        function leftClick(e){
+            console.log(e);
+            if(e.currentTarget.dataset.mine != 'fas fa-bomb'){
+                e.currentTarget.innerText = e.currentTarget.dataset.mine;
+            } else if(e.currentTarget.dataset.mine == 'fas fa-bomb'){
+                $('body').html('<h1>bom</h1>');
+            }
+            clear();
+        };
+
+        var flag = false;
+        // 눌렀을 때 이벤트
+        function rightClick(e){
+            if(!flag){
+                e.currentTarget.innerHTML = "<i class='fas fa-flag' style='font-size:11px;color:red'></i>";
+                e.currentTarget.dataset.flag= "flag";
+                flag = true;
+                return;
+            }
+            else{
+                e.currentTarget.innerHTML = "";
+                e.currentTarget.dataset.flag= "";
+                flag = false;
+                return;
+            }
+            clear();
+        };
+
+        var win=0;
+        //클리어
+        function clear(){
+            var findMine = $('td');
+            for(i=0; i<findMine.length; i++)
+                if(findMine.eq(i).data('mine')=='fas fa-bomb'&&findMine.eq(i).data('flag')=='flag') win++;
+            if(win==mineNum)    alert("승리");
+            win=0;
+        };
+
+    </script>
+</body>
+</html>

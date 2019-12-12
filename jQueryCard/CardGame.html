@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <style>
+    img{
+        width: 100px;
+        height: 150px;
+    }
+    </style>
+</head>
+<body>
+    
+    <div>
+        <button id="start">시작</button>
+        <button id="view">보이기</button>
+        <button id="blind">뒤집기</button>
+        <button id="mix">섞기</button> 
+        <button id="hint1">힌트</button>
+    </div>
+
+    <div style="text-align: left" id="board"></div>
+    
+    <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
+    <script>
+        //카드 이미지 경로를 저장할 배열
+        var card = new Array(52);
+        //보드 불러오기
+        var board = $('#board');
+        //이미지 태그 변수지정
+        var imgTags;
+        //img check를 위한 변수
+        var prev=$('img');
+        var check=0;
+        //시간체크
+        var startTime;
+        var clearTime;
+
+        //버튼 불러오기
+        var startBtn = $('#start');
+        var viewBtn = $('#view');
+        var blindBtn = $('#blind');
+        var mixBtn = $('#mix');
+        var hint1Btn = $('#hint1');
+        
+
+        startBtn.click(()=>start());
+        viewBtn.click(()=>view());
+        blindBtn.click(()=>blind());
+        mixBtn.click(()=>mix());
+        hint1Btn.click(()=>hint1());
+
+        $(document).ready(()=>{
+            //첫 화면 로딩 시 카드입력
+            for(var i=0; i<card.length; i++)
+                card[i] = i;
+            //보드생성
+            newBoard();
+
+        });
+
+        //새로운 보드 생성
+        function newBoard(){
+            for(i=0; i<card.length; i++){
+                if(i%13==0)board.append("<br>");
+                board.append($('<img>').attr({'data-card': card[i], 'src':card[i]+".png"}).click(imgClick));
+            }
+        }
+
+        //보이기 기능
+        function view(){
+            imgTags = $('img');
+            imgTags.each((index, item)=>{ item.src = item.dataset.card+".png"});
+        }
+
+        //뒤집기 기능
+        function blind(){
+            imgTags = $('img');
+            imgTags.attr('src', 'back.png');
+        }
+
+        //섞기 기능
+        function mix(){
+            card.sort((a,b)=>Math.random()-0.5);
+            board.html(null);
+            newBoard();
+        }
+
+        //시작 기능
+        function start(){
+            mix();
+            setTimeout(()=>blind(),2000);
+            startTime = new Date().getTime();
+        }
+
+        //힌트1 랜덤한거 하나 보여주고 야옹
+        function hint1(){
+            var imgTag = $('img').filter((index, item)=> item.src.indexOf('back.png') != -1 ).eq(Math.floor(Math.random()*52));
+            imgTag.attr('src', function() { return this.dataset.card+'.png'} );
+            setTimeout(()=>imgTag.attr('src', '냥이.gif'),1000);
+            setTimeout(()=>imgTag.attr('src', 'back.png'),1500);
+        }
+    
+        //눌렀을 떄 2개가 맞으면 냅두고 아니면 다시 뒤집고
+        function imgClick(){
+            var input = $(this);
+            if(input.attr('src')=='back.png'){
+                input.attr('src', function() { return this.dataset.card+'.png'} );
+                if(++check==2){
+                    if(!(prev.data('card')-input.data('card')==26 || prev.data('card')-input.data('card')==-26))
+                        (function(x,y){ setTimeout(function() {x.attr('src', 'back.png'); y.attr('src', 'back.png'); }, 500);})(input,prev);
+                    check=0;
+                }
+                prev = input;
+            }
+            clear();
+        }
+
+        //게임완료
+        function clear(){
+            clearTime = new Date().getTime();
+            var time = Math.floor((clearTime-startTime)/1000/60%60)+"분 "+Math.floor((clearTime-startTime)/1000%60)+"초 ";
+            imgTags = $('img');
+            if(imgTags.filter( (index, item)=> item.src.indexOf('back.png') == -1 ).length == card.length)
+                alert(time+"완료!");
+        }
+
+    </script>
+</body>
+</html> 

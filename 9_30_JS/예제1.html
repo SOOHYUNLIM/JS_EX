@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+      
+    <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
+    <script>
+        $(document).ready(()=>{
+            var menu = [전체, 축구, 농구, 펌프, 펀치, 탁구];
+            $("<ul id='select'></ul>").appendTo('body');
+            for(var i=0; i<menu.length; i++)
+                $('#select').append("<li><input type = 'checkbox' value='"+menu[i]+"'>"+menu[i]+"</li>");
+
+        });
+    </script>
+</body>
+</html>

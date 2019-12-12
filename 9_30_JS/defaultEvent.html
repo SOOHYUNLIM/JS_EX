@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <form action="https://nid.naver.com/nidlogin.login?mode=form&url=https%3A%2F%2Fwww.naver.com" onsubmit="return validCheck()">
+        id: <input type="text" name="id" id="userId">
+        pw: <input type="text" name="pw" id="userPw">
+        <input type="submit" value="확인">
+        
+    </form>
+
+    <script>
+        //submit 클릭시 
+        function validCheck(){
+        var userId = document.getElementById('userId').value;
+       //전역변수
+        var userPw = document.getElementById('userPw').value;
+        // if(userId.length >= 8){
+        //     alert("8자 이하로 입력해주세요.");
+        //     return false;
+        // }
+
+        //     if(userPw.length >= 8){
+        //         alert("8자 이하로 입력해주세요.");
+        //         return false;
+        //     }
+            return true;
+        }
+
+    </script>
+
+</body>
+</html>

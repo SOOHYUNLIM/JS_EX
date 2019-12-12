@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+    <a href="http:\\www.google.com" onclick="return false">구글</a>
+    
+    <img src="냥이.gif" alt="" data-x = '100'>
+
+    <script>
+        window.onload = function()  {
+            // var img = document.createElement('img');
+            
+            var imgTags = document.getElementsByTagName('img'); 
+            imgTags[0].onclick = ()=> alert("data-x"+this.getAttribute('data-x'));
+
+            // img.setAttribute('src', '냥이.gif');
+            // img.setAttribute('width', 300);
+            // img.setAttribute('height', 200);
+
+            // img.setAttribute('data-prop', 100);
+
+            // document.body.appendChild(img);
+        }
+    </script>
+</body>
+</html>

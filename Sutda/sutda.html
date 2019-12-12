@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+
+    <style>
+        td{
+            width: 100px;
+            height: 155px;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 900;
+            border:none;
+            text-indent:-10000px;
+        }
+        table{
+            margin-top: 100px;
+            margin-left: 100px;
+        }
+    </style>
+
+</head>
+<body>
+    <table border=1px>
+        <script>
+                
+        var card = new Array(18);
+        
+        card[0] = "url('1월.png')";
+        card[1] = "url('1월2.png')";
+        card[2] = "url('2월.png')";
+        card[3] = "url('2월2.png')";
+        card[4] = "url('3월.png')";
+        card[5] = "url('3월2.png')";
+        card[6] = "url('4월.png')";
+        card[7] = "url('4월2.png')";
+        card[8] = "url('5월.png')";
+        card[9] = "url('5월2.png')";
+        card[10] = "url('6월.png')";
+        card[11] = "url('6월2.png')";
+        card[12] = "url('7월.png')";
+        card[13] = "url('7월2.png')";
+        card[14] = "url('8월.png')";
+        card[15] = "url('8월1.png')";
+        card[16] = "url('9월.png')";
+        card[17] = "url('9월2.png')";
+
+        card = card.sort((a,b)=>Math.random()-0.5);
+
+        for(i=0, cnt=0; i<3; i++){
+            document.write("<tr>");
+            for(j=0; j<6; j++)
+                document.write("<td>"+"</td>");
+            document.write("</tr>");
+        }
+        var trArr = document.getElementsByTagName("tr");
+        var tdArr = document.getElementsByTagName("td");
+        
+        for(i=0; i<tdArr.length; i++){
+            tdArr[i].style.backgroundImage = card[i];
+            tdArr[i].innerText = i;
+            tdArr[i].style.backgroundSize = "100px";
+        }
+
+        for(i=0; i<tdArr.length; i++){
+            (function(x){
+                setTimeout(function() {tdArr[x].style.backgroundImage = "url('뒷면.png')"; tdArr[x].style.backgroundSize = "100px"}, 2000);
+            })(i);
+        }
+            
+        for(i=0; i<tdArr.length; i++)
+            tdArr[i].onclick = click;
+        
+        var cnt=0;
+        var tmp;
+        var victory=0;
+
+        var old;
+        var now;
+
+        var start=0;
+
+        function click(){
+            if(start++==0)
+                old = new Date().getTime();
+            this.style.backgroundImage = card[this.innerText];
+            if(++cnt==2){
+                if(!(this.style.backgroundImage.substring(0,6)==tmp.style.backgroundImage.substring(0,6))) {
+                    (function(x,y){
+                        setTimeout(function() {
+                            y.style.backgroundImage = "url('뒷면.png')"; 
+                            x.style.backgroundImage = "url('뒷면.png')"; }, 500);
+                    })(this,tmp);
+                }//색깔이 블루이고 값이 같을때
+                else    victory++;
+                cnt=0;
+            }
+            tmp = this;
+            if(victory==card.length/2)   {
+                now = new Date().getTime();
+                var sec_gap=Math.floor((now-old)/1000%60);
+        var min_gap=Math.floor((now-old)/1000/60);
+                var popup =confirm("성공!  "+min_gap+"분"+sec_gap+"초");
+                if(popup)  
+                   location.replace('sutda.html');
+                else if(!popup)  
+                    return false;
+            }
+        }
+
+    </script>
+
+    </table>
+</body>
+</html>

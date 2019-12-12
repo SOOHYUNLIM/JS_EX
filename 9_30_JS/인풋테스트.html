@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <form>
+        <table>
+            <tr>
+                <td>이름</td>
+                <td><input type="text" name="name"></td>
+            </tr>
+            <tr>
+                <td>주민등록번호</td>
+                <td><input type="text" name="reg">&nbsp-&nbsp</td>
+                <td><input type="password" name="reg"></td>
+            </tr>
+            <tr>
+                <td>아이디</td>
+                <td><input type="text" name="id"></td>
+            </tr>
+            <tr>
+                <td>비밀번호</td>
+                <td><input type="password" name="pwd"></td>
+            </tr>
+            <tr>
+                <td>비밀번호 확인</td>
+                <td><input type="password" name="pwd"></td>
+            </tr>
+            <tr>
+                <td>이메일</td>
+                <td><input type="text" name="mail">&nbsp@&nbsp</td>
+                <td><input type="password" name="mail">
+                    <select>
+                        <option>codechobo.com</option>
+                        <option>naver.com</option>
+                        <option>daum.net</option>
+                        <option>google.com</option>
+                    </select>
+
+                </td>
+            </tr>
+            <tr>
+                <td>우편번호</td>
+                <td><input type="text" name="zipCode"></td>
+            </tr>
+            <tr>
+                <td>주소</td>
+                <td><input type="text" name="adress"></td>
+                <td><input type="text" name="adress"></td>
+            </tr>
+            <tr>
+                <td>핸드폰번호</td>
+                <td><input type="text" name="phone"></td>
+            </tr>
+            <tr>
+                <td>직업</td>
+                <td><select name="job">
+                        <option>학생</option>
+                        <option>백수</option>
+                        <option>프로그래머</option>
+                    </select></td>
+            </tr>
+            <tr>
+                <td>메일/SMS 정보 수신</td>
+                <td><input type="radio" name="mailing" checked>수신
+                    <input type="radio" name="mailing">수신거부</td>
+            </tr>
+            <tr>
+                <td>관심분야</td>
+                <td><input type="checkbox" name="hobby" value="생두">생두
+                    <input type="checkbox" name="hobby" value="원두">원두
+                    <input type="checkbox" name="hobby" value="로스팅">로스팅
+
+                </td>
+            </tr>
+            <tr>
+                <input type="submit" name="sub" id="" value="회원가입">
+                <input type="button" name="cancel" id="" value="취소">
+            </tr>
+        </table>
+
+    </form>
+    <script>
+    var reg = $("input[name='reg']");
+var pw = $("input[name='pw']");
+var mail = $("input[name='mail']");
+var adress = $("input[name='adress']");
+var mailing = $("input[name='mailing']");
+var hobby = $("input[name='hobby']");
+
+reg = reg.each((idx, item)=>item.value);
+hobby.filter((index, item)=> item.checked == true).each();
+    </script>
+
+</body>
+
+</html>

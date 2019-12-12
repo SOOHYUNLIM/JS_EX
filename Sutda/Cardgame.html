@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        table{margin: auto}
+        tr{ height: 100px; }
+        td{ width: 100px; font-size: 50px; text-align: center; font-weight: bold; background-color: black;}
+    </style>
+</head>
+<body>
+    <table border="1px">
+        <script>
+            var arr = new Array(18);
+            for(i=0,k=1;i<9;i++,k++){
+                arr[2*i] = k;
+                arr[2*i+1] = k;
+            }
+            arr.sort(function(a,b){return Math.random()-0.5;})
+
+            for(i=0, k=0;i<3;i++){
+                document.write("<tr>");
+                for(j=0;j<6;j++){
+                    document.write("<td>"+arr[k++]+"</td>");
+                }
+                document.write("</tr>")
+            }
+            var tr = document.getElementsByTagName("tr");
+            var td = document.getElementsByTagName("td");
+
+            for(i=0;i<18;i++){
+                td[i].onclick = click;
+            }
+
+
+            var result = new Array();
+            function click(){
+                this.style.backgroundColor = 'white';
+                // var prevbg = this.style.backgroundColor;
+                // var prevtx = this.textContent;
+                result.push(this.style);
+                result.push(this.textContent);
+                console.log(result.length)
+                if(result.length == 4){
+                    if(!(result[0].backgroundColor == result[2].backgroundColor && result[1] == result[3])){
+                        result[0].backgroundColor = 'black';
+                        this.style.backgroundColor = 'black';
+                     }
+                    result = new Array();
+                }
+            }
+            
+
+        </script>
+    </table>
+</body>
+</html>

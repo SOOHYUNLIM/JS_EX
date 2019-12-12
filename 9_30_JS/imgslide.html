@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
+    <script>
+        var picture = ['Chrysanthemum', 'Desert', 'Hydrangeas'
+        ,'Jellyfish','Koala','Lighthouse','Penguins','Tulips'];
+
+        $(document).ready(()=>{
+            $('<div></div>').addClass('btn').appendTo('body');
+            $('<div></div>').addClass('img').appendTo('body');
+            newBtn('>', '.btn');
+            newBtn('<', '.btn');
+            for(var i=0; i<10; i++)
+                $('<img />',{src: i+'.png', width:'100px'}).appendTo('.img');
+        });
+
+        function newBtn(name, location){
+            if(name == '>')
+                $('<button></button>').click( () => $('img').last().prependTo('.img') ).text(name).appendTo(location);
+            else if(name == '<')
+                $('<button></button>').click( () => $('img').first().appendTo('.img') ).text(name).appendTo(location);
+
+            // if(name == 'test >')
+            //     $('<button></button>').click( () => $('img').attr('src',) ).text(name).appendTo(location);
+            // else if(name == 'test <')
+            //     $('<button></button>').click( () => $('img').first().appendTo('.img') ).text(name).appendTo(location);
+        }
+    </script>
+</body>
+</html>

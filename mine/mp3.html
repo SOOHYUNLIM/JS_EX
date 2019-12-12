@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <ul>
+        <li><a href="aaa.m4a" target="playerFrame">aaa.mp3</a></li>
+        <li><a href="bbb.m4a" target="playerFrame">bbb</a></li>
+        <li><a href="ccc.m4a" target="playerFrame">ccc</a></li>
+    </ul>
+
+    <iframe name="playerFrame" src="" frameborder="0" ></iframe>
+
+    <script>
+        var player = document.getElementsByName("media")[0];
+        function
+        window.onload = () => {
+            var main = document.getElementsByName("playerFrame")[0];
+            main.onload = loading;
+            console.log("main");
+        }
+
+        function loading(){
+            player.onended = nextPlay;
+        }
+
+
+        function nextPlay(){
+            var x = document.getElementsByTagName("source");
+            x[0].src = "http://192.168.1.22:8888/zzz"+"bbb.m4a";
+            player.currentTime = 0;
+            player.play();
+        }
+
+    </script>
+</body>
+</html>

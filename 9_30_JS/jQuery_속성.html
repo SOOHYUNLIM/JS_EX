@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <input type="text">
+    <input type="password">
+    <input type="radio">
+    <input type="checkbox">
+    <input type="file">
+
+    <select name="" id="s_test" multiple>
+        <option value="hello1">hello1</option>
+        <option value="hello2">hello2</option>
+        <option value="hello3">hello3</option>
+        <option value="hello4">hello4</option>
+        <option value="hello5">hello5</option>
+    </select>
+
+    <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
+    <script>
+        $(document).ready(
+        ()=>$('input[type=password]').val('Hello jQuery...!')
+        );
+    </script>
+</body>
+</html>

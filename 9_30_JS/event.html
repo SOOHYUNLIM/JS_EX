@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
+    <script>
+        $(document).ready(()=>{
+            $('<h1></h1>').text("Hi").appendTo('body');
+            // $('h1').bind('click', function() { $(this).html( (index, html) => html+'+' ) } );
+            $('h1').click(function() { $(this).html( (index, html) => html+'+' ) } );
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+
+    <style>
+    li{
+        list-style-type: none;
+    }
+    </style>
+<body>
+        <!-- 체크박스 생성 -->
+        <ul>
+            <li><input type="checkbox" value="전체">전체</li>
+            <li><input type="checkbox" value="농구">농구</li>
+            <li><input type="checkbox" value="축구">축구</li>
+            <li><input type="checkbox" value="펀치">펀치</li>
+            <li><input type="checkbox" value="탁구">탁구</li>
+            <li><input type="checkbox" value="펌프">펌프</li>
+        </ul>
+
+
+       <textarea name="" id="tx" cols="30" rows="10"></textarea>
+
+
+    
+        <!-- 클릭시 데이터 띄우기 -->
+        <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
+       <script>
+           //시작시 실행
+           $(document).ready(function() {
+            //input
+            var ck = $('input');
+            //textarea
+            var t = $('#tx');
+
+            //click 동작 입력
+            ck.click(function(e) {  
+                //text 초기화
+                t.text("");
+                //전체버튼이 체크됬을 떄
+                if(this.value=="전체"&&this.checked){
+                    ck.prop('checked', true);
+                }    
+                //체크 x
+                else if(this.value=="전체"&& !this.checked) {
+                    ck.prop('checked', false);
+                }
+                //전체 버튼 이외의 버튼이 눌렸을 때 전체버튼 체크 x
+                else{
+                    ck.first().prop('checked',false);
+                }
+                //체크 되어있는 value값 입력
+                ck.each(function(index, item) {   
+                    if(index>0 && item.checked)
+                        t.append(item.value);
+                });
+            });
+        })
+
+
+        
+
+       </script>
+
+</body>
+</html>

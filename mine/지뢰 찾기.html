@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+    td{
+        width: 25px;
+        height: 25px;
+        /* background-color: gray; */
+    }
+    </style>
+</head>
+<body>
+
+    <div id="btns"></div>
+    <div id="board"  oncontextmenu='return false' ></div>
+
+    <!-- 지뢰 아이콘 링크 -->
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <!-- 깃발 아이콘 링크 -->
+    <script src='https://kit.fontawesome.com/a076d05399.js'></script>
+    <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
+    <script>
+        //지뢰 보드 칸수 입력
+        var w = 10;
+        var h = 10;
+
+        //폭탄
+        var bomb = "<i class='fas fa-bomb' style='font-size:15px;'></i>";
+        var mineNum = Math.floor(w*h/5);
+        //깃발
+        var flag = "<i class='fas fa-flag' style='font-size:11px;color:red'></i>";
+
+        //보드
+        var board = $('#board');
+
+        $(document).ready(()=>{
+            newBoard();
+        });
+
+        //지뢰 보드 생성
+        function newBoard(){
+            var mine = new Array(mineNum).fill(bomb)
+            .concat(new Array(w*h-mineNum).fill('0')).sort(()=>Math.random()-0.5);
+            
+            $('<table></table>').attr('board',1).appendTo('#board');
+            for(var i=0, num=0; i<h; i++){
+                $('#board table').append("<tr></tr>")
+                for(var j=0; j<w; j++){
+                   $('#board table tr').eq(i).append("<td id = '"+(i+""+j)+"'>"+mine[num++]+"</td>");
+                }
+            }
+            $('#board td').filter((index, item)=> $(item).html() < 10 ).attr({'data-mine': false,'data-count': 0});
+            $('#board td').each( function(index, item){check(item)});
+            $('#board td').html(null).css('background', 'gray');
+            $('#board td').mousedown((e)=>{
+                    if(e.which == 1)    {
+                        leftClick(e);
+                    }
+
+                    else if(e.which == 3)    {
+                        rightClick(e);
+                    }
+            });
+        }
+
+        //체크
+        function check(btn){
+            var x = btn.id[0];
+            var y = btn.id[1];
+
+            var roundBtn = $('#board td').filter((idx, item)=>{
+            var nx = item.id[0];
+            var ny = item.id[1];
+            return Math.abs(x-nx) <= 1 && Math.abs(y-ny) <= 1 && (x != nx || y != ny);
+
+            // if(btn.dataset.count==0) $(roundBtn).trigger('click');
+        });
+            roundBtn.each((idx, item)=>checkMine(item, btn));
+            if($(btn).data('mine')==false)   $(btn).html($(btn).data('count'));
+        }
+
+        function checkMine(around, core){
+            if($(around).attr("data-mine") == undefined) $(core).attr("data-count", Number(core.dataset.count)+1);
+         }
+
+
+         //범위탐색
+         function checkMine2(btn){
+            var x = btn.id[0];
+            var y = btn.id[1];
+
+            var roundBtn = $('#board td').filter((idx, item)=>{
+            var nx = item.id[0];
+            var ny = item.id[1];
+            return Math.abs(x-nx) <= 1 && Math.abs(y-ny) <= 1 && (x != nx || y != ny);});
+
+            if($(btn).data('count')=='0'){
+                roundBtn.each((idx, item)=>{
+                    if($(item).data('count') == '0') {
+                        $(item).html(null).css('background', 'red');
+                        $(btn).data('count','').html(null);
+                        checkMine2(item);
+                    } else $(item).html($(item).data('count')).css('background', 'red');
+                }); 
+                $(btn).css('background', 'red');
+            }
+            //  else if($(btn).data('count')<10){
+            //     roundBtn.each((idx, item)=>{
+            //         if($(item).data('count') == '0') {
+            //             $(item).html(null).css('background', 'red');
+            //             console.log(item);
+            //             $(btn).data('count','').html(null);
+            //             if($(item).data('count')==0)checkMine2(item);
+            //         } else $(item).html($(item).data('count')).css('background', 'red');
+            //     }); 
+            // }
+         }
+
+        //좌클릭
+        function leftClick(e){
+            var x = $(e.currentTarget);
+            if(x.data('flag')!='flag'){
+                if(x.data('mine') == false){
+                    x.html(x.data('count')).css('background', 'red');
+                    checkMine2(e.currentTarget);
+                } else {
+                    $('body').html('<h1>bom</h1>');
+                }
+               clear();
+            }
+        };
+
+        //우클릭
+        function rightClick(e){
+            var x = $(e.currentTarget);
+            if(x.data('flag')=='flag'){
+                x.html('?');
+                x.data('flag','?');
+            }
+            else if(x.data('flag')=='?'){
+                x.html(null);
+                x.data('flag',null);
+            }
+            else if(x.data('flag')!='flag'){
+                x.html(flag);
+                x.data('flag','flag');
+            } 
+          clear();
+        };
+
+        //승리조건
+        function clear(){
+            console.log($('#board td').filter( (index, item)=> $(item).data('mine')==undefined && $(item).data('flag')=='flag' ).length);
+           if($('#board td').filter( (index, item)=> $(item).data('mine')==undefined && $(item).data('flag')=='flag' ).length==mineNum) 
+                alert("승리!");
+        }
+
+ 
+
+    </script>
+</body>
+</html>

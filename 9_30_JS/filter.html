@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+    <h3>Header-1</h3>
+    <h3>Header-2</h3>
+    <h3>Header-3</h3>
+    <h3>Header-4</h3>
+    <h3>Header-5</h3>
+
+    <script src="https://code.jquery.com/jquery-1.11.3.js"></script>
+    <script>
+        $(document).ready(function(){
+            // $('h3:even').css({color:'white', backgroundColor:'black'});
+            // $('h3').filter(':odd').css({color:'yellow', backgroundColor:'red'});
+            // $('h3').filter((index)=>index%3==0).css({color:'blue', backgroundColor:'red'});
+            $('h3').filter(':even').add('h3:odd').css({color:'white'});
+        });
+    </script>
+</body>
+</html>

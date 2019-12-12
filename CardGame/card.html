@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+    img{
+        /* width: 100px;
+        height: 150px; */
+        width:6%;
+        height:9% ;
+    }
+
+    button{
+        width: 100px;
+        height: 50px;
+    }
+
+    #rank{
+        font-size : 20pt;
+        font-weight: 900;
+    }
+    </style>
+</head>
+<body>
+    <div style="text-align: center">
+        <button id="gameStart">시작</button>
+        <button id="view">보이기</button>
+        <button id="blind">뒤집기</button>
+        <button id="mix">섞기</button> 
+        <button id="hint1">힌트(3)</button>
+        <button id="hint2">힌트(3)</button>       
+    </div>
+    <div style="float: left; width: 200px; height: 1000px;" id="rank">랭킹</div>
+    <div style="text-align: left" id="board"> </div>
+    
+    <script>
+        window.onload =function() {
+            //카드 짝맞추기 13x4 총 52장
+            //카드배열에 이미지 파일 경로 저장
+            var card = new Array(52);
+            for(i=0; i<card.length; i++){
+                card[i] = "<img id='"+i+ "'src ='"+i+".png' >";
+            }
+            //board의 이미지 태그 저장
+            var b_img;
+            var b_imgArr;
+
+            //카드를 생성할 보드영역
+            var b = document.getElementById("board");
+            //랭크 영역
+            var d_rank = document.getElementById("rank");
+
+
+
+            //버튼들에 기능주기
+            var gameStartBt = document.getElementById("gameStart");
+            var viewBt = document.getElementById("view");
+            var blindBt = document.getElementById("blind");
+            var mixBt = document.getElementById("mix");
+            var hintBt1 = document.getElementById("hint1");
+            var hintBt2 = document.getElementById("hint2");
+
+            btState(true);      
+
+            //힌트 갯수
+            var maxHint1 = 25;
+            var maxHint2 = 3;
+                    
+            //카드가 몇번 눌렸는지, 이전에 누른 카드 복사, 완료조건        
+            var cnt=0;
+            var tmp;
+            var victory=0;
+
+            //시작시간, 종료시간 측정
+            var old=0;
+            var now; 
+
+            //랭킹 체크
+            var ranking=1;
+            var p_rankAll;
+            var rankAll; 
+
+                //사용중인 모든 변수 초기화
+                function setValue(){
+                    maxHint1 = 25;
+                    maxHint2 = 3;
+                    cnt=0;
+                    tmp="";
+                    victory=0;
+                    old=0;
+                    now=0;
+                    hintBt1.innerText = "힌트("+maxHint1+")";
+                    hintBt2.innerText = "힌트("+maxHint2+")";
+                }
+                //새로운 보드 생성
+                newBoard();
+
+             //특정 버튼 동작 시 다른버튼 안눌리게
+             function btState(x){
+                if(x){
+                    gameStartBt.onclick = gameStart;
+                    viewBt.onclick = view;
+                    blindBt.onclick = blind;
+                    mixBt.onclick = mix;
+                    hintBt1.onclick = hint1;
+                    hintBt2.onclick = hint2;
+                } else {
+                    gameStartBt.onclick = "";
+                    viewBt.onclick = "";
+                    blindBt.onclick = "";
+                    mixBt.onclick = "";
+                    hintBt1.onclick = "";
+                    hintBt2.onclick = "";
+                }
+
+                if(x == "gameSet"){
+                    gameStartBt.onclick = gameStart;
+                    viewBt.onclick = "";
+                    blindBt.onclick = "";
+                    mixBt.onclick = "";
+                    hintBt1.onclick = hint1;
+                    hintBt2.onclick = hint2;
+                }
+            }
+
+            
+            //이미지 버튼 클릭시 로직
+        function myClick(){
+            //클릭시 뒤집어잇는 카드만 클릭되게
+            if(this.src.indexOf("back")!=-1){
+                //첫 클릭 시 시간 저장
+                if(old==0)
+                    old = new Date().getTime();
+
+                //클릭 시 원래 카드 보여주기
+                this.src = this.id+".png";
+
+                //카드가 두개 눌렸을 때
+                if(++cnt==2){
+                    //카드의 색깔과 숫자가 다를때 다시 뒷면으로
+                    if(!(this.id - tmp.id == 26 || this.id - tmp.id == -26) ) {
+                        (function(x,y){
+                            setTimeout(function() {
+                            x.src = 'back.png'; 
+                            y.src = 'back.png'; }, 500);
+                        })(this,tmp);
+                    }
+                    //맞았다면 승리카운트
+                    else    victory++;
+                    //카드 카운트 초기화
+                    cnt=0;
+                }
+                //이전에 누른 카드 정보 저장
+                tmp = this;
+                //승리조건 만족시 팝업표시 및 시간,등수 표시
+                gameClear();
+            }
+        }
+
+            //화면에 이미지 생성
+            function newBoard(){
+                setValue();
+                //먼저 보드 초기화
+                b.innerHTML = null;
+                //13장 넣고 다음줄에 넣기
+                for(i=0; i<card.length; i++){
+                    if(i%13==0) b.innerHTML+="<br>"
+                    b.innerHTML += card[i]; 
+                }
+                b_img = document.querySelectorAll("#board>img");
+                b_imgArr = Array.prototype.slice.call( b_img, 0 );     
+                for(i=0; i<b_img.length; i++){
+                    b_img[i].onclick = myClick;
+                }
+            }
+
+            //섞기
+            function mix(){
+                card = card.sort((a,b)=>Math.random()-0.5);
+                newBoard();
+            }
+               
+            //전체 보이기
+            // function view(){
+            //     btState(false);
+            //     var data = b_imgArr.shift();
+            //     data.src = String(data.id).concat(".png");
+            //     if(b_imgArr.length != 0) setTimeout(() => view(), 50);
+            //     else {b_imgArr = Array.prototype.slice.call( b_img, 0 );
+            //     btState(true);}
+            // }
+
+            //양쪽으로 뒷면 슥삭
+            function blind(){
+                btState(false);
+                b_imgArr.shift().src = "back.png";
+                b_imgArr.pop().src = "back.png";
+                if(b_imgArr.length != 0) setTimeout(() => blind(), 50);
+                else {b_imgArr = Array.prototype.slice.call( b_img, 0 );
+                setValue(); btState(true); b_img = document.querySelectorAll("#board>img"); }
+            }
+
+
+            var arr1 = new Array(26); var arr2;
+            var ptSet = false;
+            function patten() {
+                for(i=0; i<26; i++){
+                    arr1[i] = b_imgArr.pop();
+                }
+                arr2 = b_imgArr;
+            }
+
+            function view(){
+                btState(false);
+                if(!ptSet)   { patten(); ptSet = true; }
+                var data1 = arr1.pop();
+                var data2 = arr2.pop();
+                data1.src = String(data1.id).concat(".png");
+                data2.src = String(data2.id).concat(".png");
+                if(b_imgArr.length != 0) setTimeout(() => view(), 50);
+                else {b_imgArr = Array.prototype.slice.call( b_img, 0 );
+                setValue(); btState(true); ptSet = false; b_img = document.querySelectorAll("#board>img"); }
+            }
+
+            //게임 완료 시 이펙트
+            function endEvent(){
+                btState(false);
+                blind();
+                setTimeout(()=>view(), 1300 );
+                setTimeout(()=>{blind(); btState(true)}, 2600 );
+            }
+
+            // function blind(){
+            //     btState(false);
+            //     if(!ptSet)   { patten(); ptSet = true; }
+            //     arr1.pop().src = "back.png";
+            //     arr2.pop().src = "back.png";
+            //     if(arr1.length != 0) setTimeout(() => blind(), 50);
+            //     else {b_imgArr = Array.prototype.slice.call( b_img, 0 );
+            //     btState(true);}
+            // }
+
+            //특정카드 바로 뒤집기
+            function setBlind(arr){
+                for(i=0; i<arr.length; i++)
+                    b_img[i].src = arr[i];
+            }
+
+            //게임 시작
+            function gameStart(){
+                btState(false);
+                gameStartBt.innerText = "재시작";
+                mix();
+                setTimeout(function() {blind(); btState("gameSet");}, 2000);
+            }
+
+
+        //힌트
+        function hint1(){
+            if(old==0)
+                old = new Date().getTime();
+            //이미지가 뒷면이고 랜덤 하나고름
+            var randomHint = b_img[Math.floor(Math.random()*52)];
+            if(maxHint1==0)  return alert("힌트를 모두 사용하셨습니다!");
+            if(randomHint.src.indexOf("back")!=-1){
+                for(i=0; i<b_img.length; i++){
+                    if(randomHint.id - b_img[i].id == 26 || randomHint.id - b_img[i].id == -26 ){
+                        randomHint.src = randomHint.id+'.png';
+                        b_img[i].src = b_img[i].id+'.png';
+                        victory++;
+                        maxHint1--;
+                        hintBt1.innerText = "힌트("+maxHint1+")";
+                        gameClear();
+                    }
+                }
+            } else hint1();
+        }
+            //힌트 2
+            function hint2(){
+                if(old !=0 ){
+                    btState(false);
+                    var copyImg = new Array(b_img.length);
+                    for(i=0; i<b_img.length; i++){
+                        copyImg[i] = b_img[i].src;
+                        b_img[i].src = String(b_img[i].id).concat(".png");
+                    }
+                    maxHint2--;
+                    hintBt2.innerText = "힌트("+maxHint2+")";
+                    setTimeout( ()=> {setBlind(copyImg);  btState("gameSet");} ,1000);
+                }
+            }
+
+            //랭크 순으로 정렬
+            function rankCheck(){
+                p_rankAll = document.querySelectorAll("#rank>p");
+                rankAll = new Array(p_rankAll);
+                for(i=0; i<p_rankAll.length; i++)
+                    rankAll[i] = p_rankAll[i].id
+                rankAll.sort((a,b)=>a-b);
+                d_rank.innerHTML = "랭킹";
+                for(i=0; i<rankAll.length&&i<10; i++)
+                    d_rank.innerHTML+= "<p id='"+rankAll[i]+"'>"+(ranking++)+"등 "+Math.floor(rankAll[i]/1000/60%60) +"분 "+ Math.floor(rankAll[i]/1000%60)+"초"+"</p>";
+                ranking=1;
+            }
+
+            //게임 완료
+            function gameClear(){
+            //완료시 팝업
+                if(victory==26)   {
+                    now = new Date().getTime();
+                    var times = Math.floor((now-old)/1000/60%60) +"분 "+ Math.floor((now-old)/1000%60)+"초";
+                    
+                    d_rank.innerHTML+= "<p id='"+(now-old)+"'>"+"</p>";
+
+                    rankCheck();
+
+                    endEvent();
+                    setTimeout( () => {
+                        var popup =confirm("성공!  "+times);
+                        if(popup)  { newBoard(); gameStartBt.innerText = "시작"; setValue(); }
+                        else if(!popup)  return false;
+                    },3900)
+                }
+            }
+}
+        
+        
+
+    </script>
+</body>
+</html>
